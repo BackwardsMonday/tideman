@@ -103,7 +103,7 @@ bool vote(int rank, string name, int ranks[])
     for(int i = 0 ; i < candidate_count; i++)
     {
         string curent = candidates[i];
-        if (strcmp(name, curent))
+        if (strcmp(name, curent) == 0)
         {
             ranks[rank] = i;
             return true;
