@@ -147,7 +147,7 @@ void add_pairs(void)
             {
                 pairs[pair_count].winner = j;
                 pairs[pair_count].loser = i;
-                printf("%i, %i\n", pairs[pair_count].winner, pairs[pair_count].loser);
+                printf("%i, %i\n", pairs[i].winner, pairs[i].loser);
                 pair_count++;
             }
             
@@ -159,7 +159,27 @@ void add_pairs(void)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
+    for(int i = 1; i > 0;)
+    {
+        i = 0;
+        for(int j = 0; j < pair_count; j++)
+        {
+            if (preferences[pairs[j].winner][pairs[j].loser] > preferences[pairs[j+1].winner][pairs[j+1].loser])
+            {
+                pair lower = pairs[j+1];
+                pairs[j+1] = pairs[j];
+                pairs[j] = lower;
+                
+                i++;
+            }
+            
+        }
+    }
+    printf("\n");
+    for(int i = 0; i < pair_count; i++)
+    {
+        printf("%i, %i\n", pairs[i].winner, pairs[i].loser);
+    }
     return;
 }
 
