@@ -33,6 +33,7 @@ void add_pairs(void);
 void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
+bool is_cycle(pair cycle);
 
 int main(int argc, string argv[])
 {
@@ -140,14 +141,12 @@ void add_pairs(void)
             {
                 pairs[pair_count].winner = i;
                 pairs[pair_count].loser = j;
-                printf("%i, %i\n", pairs[pair_count].winner, pairs[pair_count].loser);
                 pair_count++;
             }
             else if (preferences[j][i] > preferences[i][j])
             {
                 pairs[pair_count].winner = j;
                 pairs[pair_count].loser = i;
-                printf("%i, %i\n", pairs[pair_count].winner, pairs[pair_count].loser);
                 pair_count++;
             }
             
@@ -175,25 +174,73 @@ void sort_pairs(void)
             
         }
     }
-    printf("\n");
-    for(int i = 0; i < pair_count; i++)
-    {
-        printf("%i, %i\n", pairs[i].winner, pairs[i].loser);
-    }
     return;
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    for(int i = 0; i < pair_count-1; i++)
+    {
+        if (is_cycle(pairs[i]) == true)
+        {
+            locked[pairs[i].winner][pairs[i].loser] = true;
+        }
+    }
     return;
 }
 
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    if (candidate_count == 1)
+    {
+        printf("%s\n", candidates[0]);
+        return;
+    }
+    
+    int winner = -1;
+    for(int i = 0; i < pair_count-1; i++)
+    {
+        for(int j = 0; j < pair_count-1; j++)
+        {
+            if (locked[pairs[j].winner][pairs[i].winner] == false)
+            {
+                winner = pairs[i].winner;
+            }
+            else
+            {
+                winner = -1;
+            }
+        }
+        if(winner != -1)
+        {
+            printf("%s\n", candidates[winner]);
+            return;
+        }
+        
+    }
     return;
 }
 
+bool is_cycle(pair cycle)
+{
+    for(int j = 0; j < pair_count-1; j++)
+    {
+        if(locked[cycle.loser][pairs[j].winner] == true)
+        {
+            if (pairs[j].winner == cycle.winner)
+            {
+                return false;
+            }
+            pair next;
+            next.winner == cycle.winner;
+            next.loser == pairs[j].winner;
+            if(is_cycle(next) == false)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
